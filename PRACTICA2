@@ -24,3 +24,6 @@ x=`expr $x - 1`
 done
 echo $par es Total De Pares
 echo $impar es Total De Impares
+
+
+
