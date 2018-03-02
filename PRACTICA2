@@ -1,0 +1,18 @@
+//script Este programa lee la cantidad de n número donde suma los números pares y multiplica los números impares
+
+
+clear
+read -p "Ingrese un numero: " num
+suma=0
+multi=1
+for i in $(seq 1 $num); do
+echo "número:" $i
+read nume
+if [ $(($nume%2)) -eq 0 ]; then
+suma=$(($nume+$suma))
+else
+multi=$(($nume*$multi))
+fi
+done
+echo La suma de los números par es: $suma
+echo La multiplicación de los número impar es: $multi
