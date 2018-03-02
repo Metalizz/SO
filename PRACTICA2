@@ -24,3 +24,46 @@ x=`expr $x - 1`
 done
 echo $par es Total De Pares
 echo $impar es Total De Impares
+
+
+
+/////////////////////////////////////////////////////////////////
+//EJERCICIO 2
+// Ingresa Dos numeros y luego los suma,resta,multiplica y divide y los muestra en una tabla
+
+op=0
+num1=0
+num2=0
+
+clear
+while [ $op -eq 0  ]
+do
+
+tput cup 0 1
+echo -n "Ingresa el Primer  Numero: "
+read num11
+echo -n "Ingresa el Segundo Numero: "
+read num22
+
+tput cup 10 3
+if [ $num22 -eq 0  ]; then
+
+
+  echo -n " $num11      $num22    $(( $num11 + $num22 ))      $(( $num11 - $num22 ))      $(( $num11 * $num22 ))      ERROR"
+else
+  echo -n " $num11      $num22     $(( $num11 + $num22 ))    $(( $num11 - $num22 ))      $(( $num11 * $num22 ))        $(( $num11 / $num22 )) "
+
+fi
+
+
+tput cup 9 2
+echo "Num1   Num2  Suma  Resta  Multip  Division"
+
+
+
+tput cup 3 1
+echo Salir Del Programa Si-1 No-0?
+read -p " : " op
+
+clear
+done
