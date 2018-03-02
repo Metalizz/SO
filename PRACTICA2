@@ -1,18 +1,26 @@
-//script Este programa lee la cantidad de n número donde suma los números pares y multiplica los números impares
+//script Este programa cuenta del 10 a 1 donde suma los números pares y números impares
 
+x=10
+res=0
+par=0
+impar=0
 
-clear
-read -p "Ingrese un numero: " num
-suma=0
-multi=1
-for i in $(seq 1 $num); do
-echo "número:" $i
-read nume
-if [ $(($nume%2)) -eq 0 ]; then
-suma=$(($nume+$suma))
+while [ $x -ne 0 ]
+do
+
+echo $x
+
+if [ $(($x%2)) -eq 0 ]
+then
+
+par=$(($par+$x))
 else
-multi=$(($nume*$multi))
+impar=$(($impar+$x))
+
 fi
+
+x=`expr $x - 1`
+
 done
-echo La suma de los números par es: $suma
-echo La multiplicación de los número impar es: $multi
+echo $par es Total De Pares
+echo $impar es Total De Impares
