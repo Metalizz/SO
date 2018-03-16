@@ -1,0 +1,113 @@
+#1.- Realizar un script en donde se pida una fecha día, mes y año y se imprima la
+#cantidad de días que tiene el mes. Tomar en cuenta que en años bisiestos febrero tiene
+
+clear
+echo "Ingrese (dd-mm-yyyy)"
+echo -n "Dia: "
+read Dia
+
+echo -n "Mes: "
+read Mes
+
+echo -n "Año: "
+read Anio
+echo ""
+
+if [ "$Mes" = "01" ] || [ "$Mes" = "03" ] || [ "$Mes" = "04" ] || [ "$Mes" = "05" ] || [ "$Mes" = "07" ] || [ "$Mes" = "08" ] || [ "$Mes" = "12" ] || [ "$Mes" = "12" ]
+then
+        echo -n "El Mes $Mes Tiene 31 Dias"
+        echo ""
+fi
+
+if [ "$Mes" = "04" ]||[ "$Mes" = "06" ]||[ "$Mes" = "09" ]||[ "$Mes" = "11" ]
+then
+        echo -n "El Mes $Mes Tiene 30 dias"
+        echo ""
+                dia=30
+fi
+
+if [ "$Mes" =  "02" ]
+then
+        if [ `expr $Anio % 4` == 0 ]
+        then
+
+                echo -n "Febrero tiene 29 dias, ES BISIESTO"
+                echo ""
+
+                if [ `expr $Anio % 100` == 0 ] || [ `expr $Anio % 400` != 0 ]
+                then
+                echo -n "Febrero tiene 29 dias, ES BISIESTO"
+                echo ""
+
+        	fi
+        else
+                echo -n "Febrero tiene 28 dias, NO ES BISIESTO"
+                echo ""
+
+
+        fi
+fi
+
+
+
+
+
+
+
+2.- Realizar un script donde pida un número y te imprima si son o no amigos.
+Dos números amigos son dos números enteros positivos a y b tales que la suma de los divisores
+propios de uno es igual al otro número y viceversa, es decir s(a)=b y s(b)=a, donde s(n) es igual a
+la suma de los divisores de n, sin incluir a n. (La unidad se considera divisor propio, pero no lo es el
+mismo número.).
+Un ejemplo es el par de naturales (220, 284), ya que:
+? Los divisores propios de 220 son 1, 2, 4, 5, 10, 11, 20, 22, 44, 55 y 110, que suman 284;
+? Los divisores propios de 284 son 1, 2, 4, 71 y 142, que suman 220.
+Otra pareja de números amigos (1184,1210)
+
+clear
+clear
+read -p "Ingrese El Primer Numero: " num1
+read -p "Ingrese El Segundo Numero: " num2
+
+numy=0
+numx=0
+x=0
+y=0
+all=0
+all2=0
+j=1
+i=1
+
+all=`expr $num1 / 2`
+all2=`expr $num2 / 2`
+        while [ $j -le $all ]
+        do
+        numx=`expr $num1 % $j`
+        if [ $numx -eq 0 ]
+        then
+        x=`expr $x + $j`
+        fi
+        j=`expr $j + 1`
+        done
+        echo ""
+
+        while [ $i -le $all2 ]
+        do
+        numy=`expr $num2 % $i`
+        if [ $numy -eq 0 ]
+        then
+        y=`expr $y + $i`
+        fi
+        i=`expr $i + 1`
+        done
+
+        if [ $num2 -eq $x ] && [ $num1 -eq $y ]
+        then
+        tput cup 4 4
+        echo -n "$num1 Y $num2 AMIGOS"
+        echo ""
+        else
+        tput cup 5 4
+        echo -n "$num1 Y $num2 NO AMIGOS"
+        echo ""
+        fi
