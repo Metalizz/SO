@@ -34,36 +34,72 @@ echo $impar es Total De Impares
 op=0
 num1=0
 num2=0
+suma=0
+res=0
+div=0
+mul=0
+
+col=4
 
 clear
 while [ $op -eq 0  ]
 do
 
-tput cup 0 1
-echo -n "Ingresa el Primer  Numero: "
+tput cup 3 2
+echo "Numero1"
+tput cup $col 5
 read num11
-echo -n "Ingresa el Segundo Numero: "
+
+tput cup 3 11
+echo "Numero2"
+tput cup $col 13
 read num22
 
-tput cup 10 3
-if [ $num22 -eq 0  ]; then
+
+suma=`expr $num11+$num22`
+tput cup 3 20
+echo "Suma"
+tput cup $col 21
+echo $(($suma))
+
+res=`expr $num11-$num22`
+tput cup 3 26
+echo "Resta"
+tput cup $col 28
+echo $(($res))
+
+mul=`expr $num11*$num22`
+tput cup 3 33
+echo "Multip"
+tput cup $col 35
+echo $(($mul))
 
 
-  echo -n " $num11      $num22    $(( $num11 + $num22 ))      $(( $num11 - $num22 ))      $(( $num11 * $num22 ))      ERROR"
+tput cup 6 44
+if [ $num22 -ne 0 ]
+then
+
+div=`expr $num11/$num22`
+tput cup 3 42
+echo "Division"
+
+tput cup $col 45
+echo $(($div))
 else
-  echo -n " $num11      $num22     $(( $num11 + $num22 ))    $(( $num11 - $num22 ))      $(( $num11 * $num22 ))        $(( $num11 / $num22 )) "
+tput cup 3 43
+echo "Division"
+tput cup $col 45
+echo ERROR
 
 fi
 
 
-tput cup 9 2
-echo "Num1   Num2  Suma  Resta  Multip  Division"
-
-
-
-tput cup 3 1
+tput cup 13 59
 echo Salir Del Programa Si-1 No-0?
-read -p " : " op
+tput cup 15 59
+read -p " INGRESA OPCION A ELEGIR:  " op
 
-clear
+col=$(($col+1))
+
 done
+
