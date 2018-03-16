@@ -1,0 +1,80 @@
+1.- Realizar un script en donde se mande una fecha desde línea de comandos en el formato dd,mm,aa y
+te imprima la fecha del día anterior. Tomar en cuenta cuando el año es bisiesto y cuando se cambia de
+mes y año.
+
+
+
+
+
+
+2.- Realizar un script en donde se tome la hora del sistema y el día y dependiendo de ellos imprima si la
+tienda está abierta o cerrada.
+Horarios donde permanece abierta la tienda
+L-V 10:00am - 8:30pm
+Sábado 9:30am - 6:00pm
+Domingo 10:00am - 6:00pm
+
+
+
+clear
+hora=$(date +%H+%M)
+dia=$(date +%u)
+
+
+
+#read -p "Dia De La Semana en Numero Ex(Lunes seria 1)>> " dia
+#read -p "Hora (24:00 hrs)>> " hora
+
+                        tput cup 2 5
+                        echo "LA TIENDA"
+                        echo ""
+                        tput cup 3 5
+                        echo "Horarios
+                        L-V 10:00am - 8:30pm
+                        Sábado 9:30am - 6:00pm
+                        Domingo 10:00am - 6:00pm"
+                        echo "Lunes=1/Martes=2/Miercoles=3/Jueves=4/Viernes=5/Sabado=6/Domingo=7"
+                        echo ""
+
+                                tput cup 9 5
+                                echo "DIA >> $(date +%u)"
+                                tput cup 10 5
+                                echo "HORA >>$(date +%T)"
+                                echo ""
+
+
+if [[ $dia >='1' && $dia <='5' ]]
+then
+        if [[ $hora >10:00 && $hora <20:30 ]]
+        then
+
+        echo "ABIERTO"
+        else
+        echo "CERRADO"
+        echo ""
+        fi
+fi
+#else
+if [[ $dia = '6' ]]
+then
+if [[ $hora >09:30 && $hora <18:00 ]]
+then
+echo "ABIERTOO"
+else
+echo "CERRADO11111"
+echo ""
+fi
+fi
+#else
+
+
+if [[ $dia = '7' ]]
+then
+ if [[ $hora >10:00 && $hora <18:00 ]]
+ then
+     echo "ABIERTOO"
+          else
+         echo "CERRADO22222222"
+         echo ""
+  fi
+fi
