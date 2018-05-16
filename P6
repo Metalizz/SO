@@ -1,0 +1,130 @@
+//2.- Realice un programa con 2 procesos. El primero de ellos imprimirá los archivos que hay en el directorio actual (Utilizar exec…..). El segundo proceso mostrará un menú con las siguientes opciones:
+//1) Preguntar el archivo con el que van a trabajar
+//2) Repetición de letra
+//3) Impresión de líneas al revés
+//4) Impresión de la última letra de cada renglón
+//5) Impresión de cuál es la letra o letras más repetidas en el archivo.
+//Utilizar para los archivos funciones como getc o fgets
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include <sys/wait.h>
+
+void main(){
+ FILE *archivo;
+ int op,m,longi,k,u,b,i=0,l,repeticiones[27],contar=0,cona[27]={0},mayor=0;
+ char letra,lbuscar,rest=0,a[20],add[100],text[100],caracter,caracterarchivo,abcde,abc[27]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+                system("clear");
+                printf("\n\n\t****=ARCHIVOS=****\n");
+                 if(fork()==0)
+                 { printf("\t");
+                  execlp("ls","ls",NULL);
+                 } else{
+                  wait(NULL);
+
+  do{
+ printf("\n\n\t\t***** M E N U ***** \n");
+ printf("\t[1]....Preguntar el archivo con el que van a trabajar.\n\t[2]....Repetición de letra.\n\t[3]....Impresión de líneas al revés.\n\t[4]....Impresión de la última letra de cada renglón.\n\t[5]....Impresión de cuál es la letra o letras más repetidas en el archivo.\n\t[6]....Salir\n\n\tOpcion A Elegir >> ");
+ scanf("%d",&op);
+ switch(op){
+
+         case 1: printf("\n\t*********Elegiste Opcion 1*********\n");
+                 printf("\n\tElige El Archivo Deseado >> ");
+                  scanf("%s",a);
+                    archivo=fopen(a,"r");
+                    if(archivo==NULL)
+                    {printf("\n\tError Al Abrir El Archivo\n");
+                     exit(1);
+                    }else{
+                     fgets(text,100,archivo);
+                     printf("\n\t**TEXTO DEL ARCHIVO**\n");
+                      while(!feof(archivo))
+                     {printf("%s",text);
+                      fgets(text,100,archivo);
+                     }scanf("%[^\n]s",add);
+         break;
+
+
+
+                       case 2: printf("\n\t*********Elegiste Opcion 2*********\n");
+                                rewind(archivo);
+                                        printf("\nDime Una Letra Para Mostrarte Las Veces Que Esta Repetida En El Texto >> ");
+                                        //scanf("%c",&caracter);
+                                        caracter=getchar();
+                                        caracter=getchar();
+
+                                       caracterarchivo=fgetc(archivo);
+                                        contar=0;
+                                        while(!feof(archivo))
+                                        {
+                                         if(caracterarchivo==caracter)
+                                         contar++;
+                                         caracterarchivo=fgetc(archivo);
+                                        }
+                                        printf("\n\tLa Letra >>%c \tSe Repite>> %d Veces\n",caracter,contar);
+                                break;
+
+                            case 3: printf("\n\t*********Elegiste Opcion 3*********\n");
+                                                rewind(archivo);
+                                                fgets(text,100,archivo);
+                                                printf("\n\tTEXTO DEL ARCHIVO AL REVES");
+                                                while(!feof(archivo)){
+                                                 for(i=strlen(text)-1; i>=0; i--)
+                                                  {
+                                                   l=text[i];
+                                                   printf("%c",l);
+                                                  }fgets(text,100,archivo);
+                                                }  printf("\n");
+                            break;
+
+
+        case 4: printf("\n\t*********Elegiste Opcion 4*********\n");
+                     rewind(archivo);
+                        fgets(text,100,archivo);
+
+                        printf("\n\tLA ULTIMA LETRA DE CADA RENGLON\n\n");
+                        while(!feof(archivo)){
+                        longi=strlen(text)-2;
+                        letra=text[longi];
+                        printf("\t\t%c\n",letra);
+                        fgets(text,100,archivo);}
+        break;
+
+
+        case 5: printf("\n\t*********Elegiste Opcion 5*********\n");
+                rewind(archivo);
+                caracterarchivo=getc(archivo);
+                //cona=0; conb=0;
+                while(!feof(archivo)){
+                for(k=0; k<27; k++){
+                if(caracterarchivo==abc[k])
+                cona[k]++;
+                }
+                caracterarchivo=fgetc(archivo);
+                }
+                mayor=cona[0];
+                for(k=0; k<27; k++){
+                if(cona[k]>mayor)
+                mayor=cona[k];
+                printf("\n\t Letras >>%c \tSe Repite>> %d Veces",abc[k],cona[k]);
+                }
+                printf("\n\n\n\t*************************LA LETRA MAS REPETIDA ES*************************\n");
+                for(b=0; b<27; b++){
+                 if(mayor==cona[b]){
+                   printf("\n\tLa Letra >>%c \tSe Repite>> %d Veces",abc[b],cona[b]);
+                  }
+                }
+                fclose(archivo);
+                }
+        break;
+
+        case 6: printf("\n\tSaliendo Del Programa...[]\n\n");
+        break;
+        default: printf("\n\tOPCION INVALIDA SOLO DEL [1-6]...\n");
+    }//switch
+  }//do
+         while(op!=6);
+ }//else
+}//main
+
