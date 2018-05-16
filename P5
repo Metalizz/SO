@@ -56,3 +56,88 @@ int main() {
 
   return 0;
 }
+
+
+*****************************************************************************************
+IMPRIME LOS RIEMPO PROMEDIO DEL LOS ALGORITOMOS DE FIFO Y SJF
+
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(){
+
+int op,tiempo[50],time[50],j,i,x;
+float prom=0,promedio=0,numpr=0,nump=0,trabajo=0,tra=0,total=0,tot=0,aux=0,suma=0,sumtot=0,sumtotal=0;
+        system("clear");
+        do{
+          printf("\n------------> M E N U <------------\n");
+           printf("[1]...FIFO\n[2]...SJF\n[3]...Salir\nOpcion A Elegir >> ");
+           scanf("%d",&op);
+        switch(op){
+
+        case 1: nump=0,trabajo=0,total=0,sumtotal=0;
+                printf("\n\t******* F I F O *******\n\n");
+                printf("Dime Los Procesos Que Desea>> ");
+                scanf("%f",&nump);
+                for(j=0; j<nump; j++)
+                {
+                 printf("\nTiempo Llegada(Ciclo Cpu)\n\tProceso#%d >> ",j+1);
+                 scanf("%d",&tiempo[j]);
+                }
+
+                for(j=0; j<nump; j++)
+                {
+                  total=trabajo+tiempo[j];
+                  printf("\n\nProceso>>#%d \tTiempo Llegada(CicloO Cpu)>>%d \tTotal Prom>>%.2f ",j+1,tiempo[j],total);
+                  sumtotal=sumtotal+total;
+                  trabajo=trabajo+tiempo[j];
+                }
+
+                prom=sumtotal/nump;
+                printf("\n\nTiempo Promedio>> %.2f MS\n",prom);
+         break;
+
+        case 2: numpr=0,aux=0,tot=0,tra=0,sumtot=0;
+                printf("\n\t******* S J F *******\n\n");
+                printf("Dime Los Procesos Que Desea>> ");
+                scanf("%f",&numpr);
+                for(i=0; i<numpr; i++)
+                {
+                 printf("\nTiempo Llegada(Ciclo Cpu)\n\tProceso#%d >> ",i+1);
+                 scanf("%d",&time[i]);
+                }
+
+                for(i=0; i<numpr; i++){
+                 for(x=0; x<numpr; x++){
+                  if(time[i]<time[x]){
+
+                     aux=time[i];
+                     time[i]=time[x];
+                     time[x]=aux;
+                  }
+                 }
+                }
+
+               for(i=0; i<numpr; i++){
+                  tot=tra+time[i];
+                  printf("\n\nProceso>>#%d \tTiempo Llegada(CicloO Cpu)>>%d \tTotal Prom>>%.2f ",i+1,time[i],tot);
+                  sumtot=sumtot+tot;
+                  tra=tra+time[i];
+                }
+                promedio=sumtot/numpr;
+                printf("\n\nTiempo Promedio>> %.2f MS\n",promedio);
+
+        break;
+
+                case 3: system("clear");
+                        printf("\n\n\tSaliendo del programa...[]\n"); break;
+                default:printf("\n\tOPCION INVALIDA\n");
+       }
+
+        }while(op!=3);
+        return 0;
+}
+
+
+
+
