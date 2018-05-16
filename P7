@@ -1,0 +1,292 @@
+Realice el siguiente programa.
+1.- Realizar un programa con las siguientes opciones:
+a) Captar los siguientes datos: Nombre, número de credencial INE, edad y grabar
+los datos en el archivo llamado “datos.dat”
+b) Impresión de datos: Imprimir una tabla con encabezados de los datos grabados en el archivo
+c) Imprimir una tabla de las personas que pueden votar, y otra tabla de las personas que no pueden votar (Votan las personas con edad mínima de 18).
+d) Imprimir el promedio de edades de las personas del archivo.
+e) Imprimir la persona o personas cuya edad es la mayor
+f) Salida.
+Utilice funciones, ncurses fputs y fgets.
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<ncurses.h>
+#include<string.h>
+
+typedef struct
+{
+ char nombre[100];
+ char ine[100];
+ char edad[100];
+}Datos;
+
+void registro();
+void impresion();
+void derecho();
+void promedio();
+void mayores();
+
+int main()
+{
+ char op;
+ initscr();
+ do
+ {
+  clear();
+  printw("Menú \n\n");
+  printw("a) Registro de datos \n");
+  printw("b) Impresión de datos \n");
+  printw("c) Tablas sobre votantes \n");
+  printw("d) Impresión de promedio de edades \n");
+  printw("e) Impresión de personas cuya edad es mayor \n");
+  printw("f) Salida del programa \n\n");
+  printw("Seleccione una de las opciones: ");
+  scanw("%c",&op);
+  switch(op)
+  {
+   case 'a':
+   {
+    registro();
+   }break;
+
+   case 'b':
+   {
+ impresion();
+   }break;
+
+   case 'c':
+   {
+    derecho();
+   }break;
+
+   case 'd':
+   {
+    promedio();
+   }break;
+
+   case 'e':
+   {
+    mayores();
+   }break;
+  }
+ }while(op!='f');
+ endwin();
+}
+
+void registro()
+{
+ Datos D;
+ int x=0;
+ FILE *archivo;
+ char op2;
+ archivo=fopen("datos.dat","a");
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+
+ rewind(archivo);
+ initscr();
+ do
+ {
+  printw("Ingrese el nombre del votante: ");
+  scanw("%s",D.nombre);
+strcat(D.nombre,"\n");
+  fputs(D.nombre,archivo);
+  printw("Ingrese el no. de credencial de INE: ");
+  scanw("%s",&D.ine);
+  strcat(D.ine,"\n");
+  fputs(D.ine,archivo);
+  printw("Ingrese la edad del votante: ");
+  scanw("%s",&D.edad);
+  strcat(D.edad,"\n");
+  fputs(D.edad,archivo);
+  x++;
+  printw("\n\n¿Desea ingresar otro dato? (s/n)");
+  scanw("%c",&op2);
+ }while(op2!='n');
+ fclose(archivo);
+ endwin();
+}
+
+void impresion()
+{
+ FILE *archivo;
+ int var=10;
+ char texto[20]="";
+ archivo=fopen("datos.dat","r");
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+ rewind(archivo);
+ initscr();
+ clear();
+ fgets(texto,100,archivo);
+ while(!feof(archivo))
+ {
+  mvprintw(7,30,"Nombre");
+  mvprintw(7,50,"No. de INE");
+  mvprintw(7,70,"Edad");
+
+  mvprintw(var,30,"%s",texto);
+  fgets(texto,100,archivo);
+
+  mvprintw(var,50,"%s",texto);
+  fgets(texto,100,archivo);
+
+  mvprintw(var,70,"%s",texto);
+  fgets(texto,100,archivo);
+  var++;
+ }
+ getch();
+ fclose(archivo);
+ endwin();
+
+}
+
+void derecho()
+{
+ FILE *archivo;
+ int nosi=0,var=9,var2=9,posma[10],posme[10],con=0,x=0,y=0,z=0,w=0,EdadI=0;
+ char NombreS[10][10]={},NombreN[10][10]={};
+ Datos D;
+
+ archivo=fopen("datos.dat","r+");
+ char textoN[100]="",textoI[100]="",textoE[100]="";
+
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+ rewind(archivo);
+ initscr();
+ clear();
+ fgets(textoN,100,archivo);
+ fgets(textoI,100,archivo);
+ fgets(textoE,100,archivo);
+ while(!feof(archivo))
+ {
+ EdadI=atoi(textoE);
+  if(EdadI<18)
+  {
+   strcpy(NombreN[x],textoN);
+   x++;
+  }
+                                    
+else
+  {
+   strcpy(NombreS[y],textoN);
+   y++;
+  }
+ con++;
+ fgets(textoN,100,archivo);
+ fgets(textoI,100,archivo);
+ fgets(textoE,100,archivo);
+ }
+
+ mvprintw(7,30,"Pueden votar: \n\n");
+ for(z=0;z<y;z++)
+ {
+  mvprintw(var,30,"%s",NombreS[z]);
+  var++;
+ }
+
+ mvprintw(7,60,"No pueden votar: \n\n");
+ for(w=0;w<x;w++)
+ {
+  mvprintw(var2,60,"%s",NombreN[w]);
+  var2++;
+ }
+ getch();
+ fclose(archivo);
+ endwin();
+}
+
+void promedio()
+{
+ char texto[100]={},textoE[100]={};
+ FILE *archivo;
+ float promedio=0,suma=0,EdadI=0,divisor=0;
+ archivo=fopen("datos.dat","r");
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+ rewind(archivo);
+initscr();
+ clear();
+ fgets(texto,100,archivo);
+ fgets(texto,100,archivo);
+ fgets(textoE,100,archivo);
+ while(!feof(archivo))
+ {
+  EdadI=atoi(textoE);
+  suma=suma+EdadI;
+  divisor++;
+  fgets(texto,100,archivo);
+  fgets(texto,100,archivo);
+  fgets(textoE,100,archivo);
+ }
+ promedio=suma/divisor;
+ printw("El promedio de edades es de: %f \n",promedio);
+ getch();
+ fclose(archivo);
+ endwin();
+}
+
+
+void mayores()
+{
+ FILE *archivo;
+ int EdadI=0,Mayor=0;
+ char texto[100]="",textoN[100]="",textoE[100]="";
+ archivo=fopen("datos.dat","r");
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+ rewind(archivo);
+ initscr();
+ clear();
+ fgets(texto,100,archivo);
+ fgets(texto,100,archivo);
+ fgets(textoE,100,archivo);
+ Mayor=atoi(textoN);
+ while(!feof(archivo))
+ {
+  EdadI=atoi(textoE);
+if(EdadI>Mayor)
+  {
+   Mayor=EdadI;
+  }
+  fgets(texto,100,archivo);
+  fgets(texto,100,archivo);
+  fgets(textoE,100,archivo);
+ }
+ rewind(archivo);
+ printw("La mayor edad registrada fue: %d \n",Mayor);
+ fgets(textoN,100,archivo);
+ fgets(texto,100,archivo);
+ fgets(textoE,100,archivo);
+ while(!feof(archivo))
+ {
+  EdadI=atoi(textoE);
+  if(EdadI==Mayor)
+  {
+   printw("%s",textoN);
+  }
+  fgets(textoN,100,archivo);
+  fgets(texto,100,archivo);
+  fgets(textoE,100,archivo);
+ }
+ getch();
+ fclose(archivo);
+ endwin();
+}
