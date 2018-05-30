@@ -1,0 +1,221 @@
+/*PRACTICA 9 
+Teclear el programa que viene en la práctica y añadir la función de atender
+mediante el algoritmo FIFO. Dicho algoritmo atenderá la persona en la
+primera posición y recorrerá los vectores.
+Utilice una estructura, memoria dinámica para 4 personas, funciones
+presentación en pantalla y flechas. También valide que no se permita
+capturar más de cuatro personas, ya que ocasionará un desbordamiento.*/
+
+
+
+#include <string.h>
+#include <stdlib.h>
+#include <ncurses.h>
+int num;
+char *choices[]={
+"1) Altas","2) Imprimir","3) Atender","4) Salida",
+};
+
+int n_choices=4;
+void print_menu(int highlight);
+void altas();
+void imprimir();
+void atender();
+
+struct{
+char *nombres[4];
+char *direccion[4];
+char *fecha[4];
+int num;
+}var1;
+
+int main(){
+int highlight=1;
+int choice=0;
+int c,ban=0;
+initscr();
+        do{
+        keypad(stdscr,TRUE);
+        refresh();
+        print_menu(highlight);
+        c=getch();
+        switch(c){
+                case KEY_UP:
+                if(highlight==1)
+                highlight=n_choices;
+                else
+                --highlight;
+                break;
+                case KEY_DOWN:
+                if(highlight==n_choices)
+                highlight=1;
+                else
+                ++highlight;
+                break;
+                case 10:
+                choice=highlight;
+                switch(choice)
+                        { //clear();
+                        case 1:
+                        altas();
+                        noecho();
+                        break;
+                        case 2:
+                        imprimir();
+                        noecho();
+                        break;
+                        case 3:
+                        atender();
+                        noecho();
+                        break;
+                        case 4:
+                        ban=1;
+                        break;
+                        }
+                break;
+                }
+        }while(ban==0);
+clrtoeol();
+refresh();
+endwin();
+return 0;
+}
+
+
+void print_menu(int highlight)
+{
+ int x=5,y=15,i;
+ for(i=0;i<n_choices;i++)
+ {
+  if(highlight==i+1)
+  {
+   attron(A_REVERSE);
+   mvprintw(y,x,"%s",choices[i]);
+   attroff(A_REVERSE);
+  }else
+   mvprintw(y,x,"%s",choices[i]);
+  y++;
+ }
+ refresh();
+}
+
+
+
+void altas(){
+char pedirnombres[80],pedirdir[80],fecha[80];
+clear();
+int x, espacio, y;
+char op='s';
+while(op=='s')
+{
+        printw("\n\n++++ R E G I S T R O ++++\n ");
+        printw("\n\nNombre: ");
+        getstr(pedirnombres);
+        y=strlen(pedirnombres);
+        var1.nombres[var1.num]=(char *)malloc(y+1);
+
+        printw("Direccion: ");
+        getstr(pedirdir);
+        y=strlen(pedirdir);
+        var1.direccion[var1.num]=(char *)malloc(y+1);
+
+        printw("Fecha de nacimiento: ");
+        getstr(fecha);
+        var1.fecha[var1.num]=(char *)malloc(y+1);
+
+        if(var1.nombres[var1.num]==NULL || var1.direccion[var1.num]==NULL || var                                                                                        1.fecha[var1.num]==NULL)
+            printw("Memoria insuficiente\n");
+        else{
+                strcpy(var1.nombres[var1.num],pedirnombres);
+                strcpy(var1.direccion[var1.num],pedirdir);
+                strcpy(var1.fecha[var1.num],fecha);
+            }
+        printw("Desea ingresar otro s/n: ");
+        op=getch();
+        var1.num++;
+}
+}
+
+void imprimir(){
+clear();
+int x, renglon=2;
+printw("++++ I M P R I M I R ++++\n\n");
+for(x=0;x<var1.num;x++)
+{
+        mvprintw(renglon,5,"%s",var1.nombres[x]);
+        mvprintw(renglon,30,"%s",var1.direccion[x]);
+        mvprintw(renglon,45,"%s",var1.fecha[x]);
+        renglon++;
+}
+getch();
+}
+
+void atender(){
+clear();
+int x,ciclo,s,b=0,y=0;
+char pedirnombres[80];
+printw("\n\n++++ A T E N D E R ++++\n\n");
+//printw("Nombre a atender: ");
+//getstr(pedirnombres);
+//for(x=0;x<var1.num;x++)
+        if(!strcmp(var1.nombres[x],pedirnombres))
+        {
+                //ciclo=x;
+                //b=1;
+                free(var1.nombres[x]);
+                free(var1.direccion[x]);
+                free(var1.fecha[x]);
+        }//if(b==1)
+        //{
+                for(s=0/*ciclo*/;s<var1.num-1;s++)
+                {
+                        y=strlen(var1.nombres[s+1]);
+                        var1.nombres[s]=(char *)malloc(y+1);
+                        strcpy(var1.nombres[s],var1.nombres[s+1]);
+
+                        y=strlen(var1.direccion[s+1]);
+                        var1.direccion[s]=(char *)malloc(y+1);
+                        strcpy(var1.direccion[s],var1.direccion[s+1]);
+
+                        y=strlen(var1.fecha[s+1]);
+                        var1.fecha[s]=(char *)malloc(y+1);
+                        strcpy(var1.fecha[s],var1.fecha[s+1]);
+                }
+                var1.num--;
+                           printw("\n\tSe Desconecto El Registro Mas Viejo\n");
+        /*} else
+                printw("\n\nREGISTRO NO ENCONTRADO\n");*/
+getch();
+}
+
+/*int main(void)
+{
+initscr();
+char op;
+int w=0;
+var1.num=0;
+do{
+        clear();
+        printw("************ M E N U ************");
+        printw("\n\n\t1) Altas\n");
+        printw("\t2) Imprimir\n");
+        printw("\t3) Atender\n");
+        printw("\t4) Salida\n");
+        printw("\tOpcion >> ");
+        op=getch();
+        switch(op)
+        {
+                case '1':
+                        altas();
+                        break;
+                case '2':
+                        imprimir();
+                        break;
+                case '3':
+                        atender();
+                        break;
+        }
+} while(op!=4);
+endwin();
+}*/
+
