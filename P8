@@ -349,3 +349,693 @@ int op=0;
         }
 }
 
+****************************************************************************
+#include<ncurses.h>
+#include<string.h>
+#include<stdlib.h>
+int num;
+char *choices[]={
+"1)Registro",
+"2)Consulta",
+"3)Imprimir tabla mayores de edad y menores de edad",
+"4)Mofidicaciones",
+"5)Escribir las que pueden votar en otro archivo",
+"6)Escribir las que no pueden votar en otro archivo",
+"7)Salir",
+};
+int n_choices=7;
+void print_menu(int highlight);
+struct
+{
+char nombre[20];
+int  numine;
+int edad;
+}registro;
+int main()
+{
+int highlight=1;
+int choice=0;
+int c,ban=0,op,x,adulto=18,contedad=0,m=0,mayor=0,suma=0,var=8,cedad=0,pos=-1,nr=0,numineb,opc;
+char op1,letra;
+float promedio=0;
+FILE *archivo;
+archivo=fopen("datos.dat","ab+");
+initscr();
+{
+start_color();
+}
+init_pair(1,COLOR_GREEN, COLOR_BLACK);
+init_pair(2,COLOR_RED, COLOR_BLACK);
+
+        do
+        {
+        clear();
+        keypad(stdscr,TRUE);
+        mvprintw(5,30,"MENU PRINCIPAL");
+        mvprintw(25,10,"Usa las flechas y ENTER");
+        refresh();
+        print_menu(highlight);
+        c=getch();
+        switch(c)
+                {
+                case KEY_UP:
+                if(highlight==1)
+                highlight=n_choices;
+                else
+                --highlight;
+                break;
+                case KEY_DOWN:
+                if(highlight==n_choices)
+                highlight=1;
+                else
+                ++highlight;
+                break;
+                case 10:
+                choice=highlight;
+                switch(choice)
+                        {
+                        case 1:
+                        clear();
+                        archivo=fopen("datos.dat","a");
+                                {
+                                printw("Ingrese su nombre:\n");
+                                scanw("%s",registro.nombre);
+                                printf("Ingrese el numero de ine:\n");
+                                scanw("%d",&registro.numine);
+                                printf("Ingrese su edad:\n");
+                                scanw("%d",&registro.edad);
+                                fwrite(&registro,sizeof(registro),1,archivo);
+                                }
+                        fclose(archivo);
+                        break;
+                        case 2:
+                        clear();
+                        archivo=fopen("datos.dat","r");
+                        var=8;
+                        fread(&registro,sizeof(registro),1,archivo);
+                        while(!feof(archivo))
+                        {
+                                mvprintw(7,30,"Nombre");
+                                mvprintw(7,50,"Numero de ine");
+                                mvprintw(7,65,"Edad");
+                                mvprintw(var,30,"%s",registro.nombre);
+                                mvprintw(var,50,"%d",registro.numine);
+                                mvprintw(var,65,"%d",registro.edad);
+                                fread(&registro,sizeof(registro),1,archivo);
+                                var++;
+                        }
+                        getch();
+                        fclose(archivo);
+                        break;
+                        case 3:
+                        clear();
+                        archivo=fopen("datos.dat","r");
+                        int variable=8;
+                        var=8;
+                        fread(&registro,sizeof(registro),1,archivo);
+                        while(!feof(archivo))
+                        {
+                                if(registro.edad>=18)
+                                        {
+                                        mvprintw(6,30,"LOS QUE PUEDEN VOTAR");
+                                        mvprintw(7,25,"Nombre");
+                                        mvprintw(7,40,"Numero de ine");
+                                        mvprintw(7,55,"Edad");
+                                        mvprintw(var,25,"%s",registro.nombre);
+                                        mvprintw(var,40,"%d",registro.numine);
+                                        mvprintw(var,55,"%d",registro.edad);
+                                        if(registro.edad>mayor)
+                                        {
+                                         mayor=registro.edad;
+                                        }
+                                         if(registro.edad==mayor)
+                                        {
+                                         attron(COLOR_PAIR(1));
+                                         mvprintw(var,25,"%s",registro.nombre);
+                                         attroff(COLOR_PAIR(1));
+                                        }
+                                        var++;
+                                        }
+                                else
+                                        {
+                                        mvprintw(6,70,"LOS QUE NO PUEDEN VOTAR");
+                                        mvprintw(7,65,"Nombre");
+                                        mvprintw(7,80,"Numero de ine");
+                                        mvprintw(7,95,"Edad");
+                                        mvprintw(variable,65,"%s",registro.nombre);
+                                        mvprintw(variable,80,"%d",registro.numine);
+                                        mvprintw(variable,95,"%d",registro.edad);
+                                        if(registro.edad>m)
+                                        {
+                                         m=registro.edad;
+                                        }
+                                         if(registro.edad==m)
+                                        {
+                                         attron(COLOR_PAIR(2));
+                                         mvprintw(variable,65,"%s",registro.nombre);
+                                         attroff(COLOR_PAIR(2));
+                                        }
+                                        variable++;
+                                        }
+                                fread(&registro,sizeof(registro),1,archivo);
+                        }
+                        getch();
+                        fclose(archivo);
+                        break;
+                        case 4:
+                        clear();
+                        archivo=fopen("datos.dat","r+");
+                        printw("NUMERO DE INE  QUE DESEA MODIFICAR:");
+                        scanw("%d",&numineb);
+                        fread(&registro,sizeof(registro),1,archivo);
+                        while(!feof(archivo))
+                        {
+                                if(numineb==registro.numine)
+                                {
+                                        printw("Nombre:%s\n",registro.nombre);
+                                        printw("Numero de ine:%d\n",registro.numine);
+                                        printw("Edad:%d\n",registro.edad);
+                                        printw("ES LA INFORMACION CORRECTA:\n");
+                                        scanw("%c",&op1);
+                                        if(op1=='s')
+                                        {
+                                                printw("DATOS A MODIFICAR\n");
+                                                printw("1.-Nombre\n");
+                                                printw("2.-Numero de ine\n");
+                                                printw("3.-Edad\n");
+                                                printw("4.-Salir\n");
+                                                printw("Que datos desea modificar:");
+                                                scanw("%d",&opc);
+                                                switch(opc)
+                                                {
+                                                case 1:
+                                                                printw("Nuevo nombre:");
+                                                                scanw("%s",registro.nombre);
+                                                        break;
+                                                        case 2:
+                                                                printw("Nuevo numero de ine:");
+                                                                scanw("%d",&registro.numine);
+                                                        break;
+                                                        case 3:
+                                                                printw("Inserte la nueva edad:");
+                                                                scanw("%d",&registro.edad);
+                                                        break;
+                                                }
+                                                fseek(archivo,-sizeof(registro),SEEK_CUR);
+                                                fwrite(&registro,sizeof(registro),1,archivo);
+                                        }
+                                }
+                                fread(&registro,sizeof(registro),1,archivo);
+                        }
+                        fclose(archivo);
+                        break;
+                        case 5:
+                        clear();
+                        FILE *votan;
+                        archivo=fopen("datos.dat","r");
+                        votan=fopen("votan.txt","w");
+                        if(archivo==NULL || votan==NULL)
+                        {
+                                printw("Error");
+                                exit(1);
+                        }
+                        fread(&registro,sizeof(registro),1,archivo);
+                        while(!feof(archivo))
+                        {
+                                if(registro.edad>=18)
+                                {
+                                        fwrite(&registro,sizeof(registro),1,votan);
+                                }
+                                 fread(&registro,sizeof(registro),1,archivo);
+                        }
+                        getch();
+                        fclose(archivo),fclose(votan);
+                        break;
+                        case 6:
+                        clear();
+                        FILE *novotan;
+                        archivo=fopen("datos.dat","r");
+                        novotan=fopen("novotan.txt","w");
+                        if(archivo==NULL || novotan==NULL)
+                        {
+                                printw("Error");
+                                exit(1);
+                        }
+                        fread(&registro,sizeof(registro),1,archivo);
+                        while(!feof(archivo))
+                        {
+                                if(registro.edad<18)
+                                {
+                                         fwrite(&registro,sizeof(registro),1,novotan);
+                                }
+                                 fread(&registro,sizeof(registro),1,archivo);
+                        }
+                        getch();
+                        fclose(archivo),fclose(novotan);
+                        break;
+                        case 7:
+                        ban=1;
+                        break;
+                        }
+                break;
+                }
+        }while(ban==0);
+clrtoeol();
+refresh();
+endwin();
+return 0;
+}
+void print_menu(int highlight)
+{
+int x=5,y=15,i;
+        for(i=0;i<n_choices;i++)
+        {
+                if(highlight==i+1)
+                {
+                attron(A_REVERSE);
+                mvprintw(y,x,"%s",choices[i]);
+                attroff(A_REVERSE);
+                }
+                else
+                mvprintw(y,x,"%s",choices[i]);
+                ++y;
+        }
+refresh();
+}
+***************************************************************************************************
+#include<stdio.h>
+#include<stdlib.h>
+#include<ncurses.h>
+#include<string.h>
+
+typedef struct
+{
+ char nombre[20];
+ int ine;
+ int edad;
+}Datos;
+
+
+char *choices[]={
+ "a) Registro de datos",
+ "b) Impresion de datos",
+ "c) Tabla sobre votantes",
+ "d) Modificaciones por numero de credencial",
+ "e) Guardar a los votantes en un archivo",
+ "f) Guardar a los no votantes en un archivo",
+ "g) Salir",
+};
+
+int n_choices=7;
+void print_menu(int highlight);
+void registro();
+void impresion();
+void derecho();
+void modificaciones();
+void votantes();
+void novotantes();
+
+int main()
+{
+ char op;
+ int highlight=1;
+ int choice=0;
+ int c,ban=0;
+ initscr();
+ do
+ {
+  clear();
+  keypad(stdscr,TRUE);
+  mvprintw(5,30,"Menú \n\n");
+  refresh();
+  print_menu(highlight);
+  c=getch();
+  switch(c)
+  {
+   case KEY_UP:
+    if(highlight==1)
+     highlight=n_choices;
+    else
+     --highlight;
+   break;
+
+   case KEY_DOWN:
+    if(highlight==n_choices)
+     highlight=1;
+    else
+     ++highlight;
+    break;
+
+   case 10:
+   choice=highlight;
+   switch(choice)
+   {
+    case 1:
+    {
+     registro();
+    }break;
+
+    case 2:
+    {
+     impresion();
+    }break;
+
+    case 3:
+    {
+     derecho();
+    }break;
+
+    case 4:
+    {
+     modificaciones();
+    }break;
+
+    case 5:
+    {
+     votantes();
+    }break;
+
+    case 6:
+    {
+     novotantes();
+    }break;
+
+    case 7:{
+     ban=1;
+    }break;
+   }
+  break;
+  }
+ }while(ban==0);
+clrtoeol();
+refresh();
+endwin();
+return 0;
+}
+
+void print_menu(int highlight)
+{
+ int x=5,y=15,i;
+ for(i=0;i<n_choices;i++)
+ {
+  if(highlight==i+1)
+  {
+   attron(A_REVERSE);
+   mvprintw(y,x,"%s",choices[i]);
+   attroff(A_REVERSE);
+  }
+  else
+   mvprintw(y,x,"%s",choices[i]);
+  y++;
+ }
+ refresh();
+}
+
+void registro()
+{
+ Datos D;
+ int x=0;
+ FILE *archivo;
+ char op2;
+ archivo=fopen("datos.dat","a");
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+
+ rewind(archivo);
+ initscr();
+ do
+ {
+  clear();
+  printw("Ingrese el nombre del votante: ");
+  scanw("%s",D.nombre);
+  printw("Ingrese el no. de credencial de INE: ");
+  scanw("%d",&D.ine);
+  printw("Ingrese la edad del votante: ");
+  scanw("%d",&D.edad);
+  x++;
+  fwrite(&D,sizeof(Datos),1,archivo);
+  printw("\n\n¿Desea ingresar otro dato? (s/n)");
+  scanw("%c",&op2);
+ }while(op2!='n');
+ fclose(archivo);
+ endwin();
+}
+
+void impresion()
+{
+ FILE *archivo;
+ Datos D;
+ archivo=fopen("datos.dat","r");
+ char texto[100]="",var=8;
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+ rewind(archivo);
+ initscr();
+ clear();
+ mvprintw(6,30,"Nombre:");
+ mvprintw(6,50,"No de ine:");
+ mvprintw(6,70,"Edad:");
+ fread(&D,sizeof(Datos),1,archivo);
+ while(!feof(archivo))
+ {
+  mvprintw(var,30,"%s",D.nombre);
+  mvprintw(var,50,"%d",D.ine);
+  mvprintw(var,70,"%d",D.edad);
+  var++;
+  fread(&D,sizeof(Datos),1,archivo);
+ }
+ getch();
+ fclose(archivo);
+ endwin();
+}
+
+void derecho()
+{
+ FILE *archivo;
+ int posma[10],posme[10],con=0,x=0,y=0,z=0,w=0,mayorS=0,mayorN=0,var=6,var2=6;
+ char NombreS[10][10]={},NombreN[10][10]={};
+ Datos D;
+ archivo=fopen("datos.dat","r+");
+ char texto[100]="";
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+ rewind(archivo);
+ initscr();
+ clear();
+ mvprintw(4,30,"No pueden votar:");
+ mvprintw(4,60,"Pueden votar:");
+ fread(&D,sizeof(Datos),1,archivo);
+ while(!feof(archivo))
+ {
+  if(D.edad<18)
+  {
+   if(D.edad>mayorN)
+   {
+    mayorN=D.edad;
+   }
+  }
+  else
+  {
+   if(D.edad>mayorS)
+   {
+    mayorS=D.edad;
+   }
+  }
+  fread(&D,sizeof(Datos),1,archivo);
+ }
+
+ rewind(archivo);
+ fread(&D,sizeof(Datos),1,archivo);
+ while(!feof(archivo))
+ {
+  if(D.edad<18)
+  {
+   if(D.edad==mayorN)
+   {
+    attron(A_REVERSE);
+    mvprintw(var,30,"%s",D.nombre);
+    attroff(A_REVERSE);
+   }
+   else
+    mvprintw(var,30,"%s",D.nombre);
+   var++;
+  }
+
+  else
+  {
+   if(D.edad==mayorS)
+   {
+    attron(A_REVERSE);
+    mvprintw(var2,60,"%s",D.nombre);
+    attroff(A_REVERSE);
+   }
+   else
+    mvprintw(var2,60,"%s",D.nombre);
+   var2++;
+  }
+  fread(&D,sizeof(Datos),1,archivo);
+ }
+
+ getch();
+ fclose(archivo);
+ endwin();
+}
+
+void modificaciones()
+{
+ FILE *archivo;
+ Datos D;
+ int buscar,pos=-1,nr=0;
+ char op,op2;
+
+ archivo=fopen("datos.dat","r+");
+ char texto[100]="";
+ int hayuno=0;
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+ rewind(archivo);
+ initscr();
+ clear();
+ printw("Ingrese la INE del registrado a modificar: \n");
+ scanw("%d",&buscar);
+ fread(&D,sizeof(Datos),1,archivo);
+ while(!feof(archivo))
+ {
+  if(buscar==D.ine)
+  {
+   pos=nr;
+   break;
+  }
+  nr++;
+  fread(&D,sizeof(Datos),1,archivo);
+ }
+ if(pos!=-1)
+ {
+  fseek(archivo,pos*sizeof(archivo),0);
+  printw("¿Desea modificar información de %s  (s,n)?",D.nombre);
+  scanw("%c",&op2);
+  if(op2=='s')
+  {
+   clear();
+   printw("Qué desea modificar\n\n");
+   printw("a) El nombre\n");
+   printw("b) El INE\n");
+   printw("c) La edad\n");
+   printw("d) Salir     ");
+   scanw("%c",&op);
+   switch(op)
+   {
+    case 'a':
+    {
+     printw("\nIngrese el nuevo nombre: ");
+     scanw("%s",D.nombre);
+    }break;
+
+    case 'b':
+    {
+     printw("\nIngrese la nueva INE: ");
+     scanw("%d",&D.ine);
+    }break;
+
+    case 'c':
+    {
+     printw("\nIngrese la nueva edad: ");
+     scanw("%d",&D.edad);
+    }break;
+
+    case 'd':
+    {
+    }break;
+
+    default:
+    {
+     printw("\nIngrese una opción válida");
+    }break;
+   }
+   fseek(archivo,pos*sizeof(Datos),0);
+   fwrite(&D,sizeof(Datos),1,archivo);
+  }
+  else
+  {
+   printw("No se encontró la INE ingresada");
+   getch();
+  }
+ }
+ fclose(archivo);
+ endwin();
+}
+
+void votantes()
+{
+ FILE *archivo,*archivoS;
+ Datos D;
+ int mayor=0;
+ archivo=fopen("datos.dat","r+");
+ archivoS=fopen("votar.dat","a");
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+ rewind(archivo);
+ initscr();
+ clear();
+ fread(&D,sizeof(Datos),1,archivo);
+ while(!feof(archivo))
+ {
+  if(D.edad>=18)
+  {
+   fwrite(&D,sizeof(Datos),1,archivoS);
+  }
+  fread(&D,sizeof(Datos),1,archivo);
+ }
+
+ getch();
+ fclose(archivo);
+ fclose(archivoS);
+ endwin();
+}
+
+void novotantes()
+{
+ FILE *archivo,*archivoN;
+ Datos D;
+ int mayor=0;
+ archivo=fopen("datos.dat","r+");
+ archivoN=fopen("novotar.dat","a");
+ if(archivo==NULL)
+ {
+  printw("Error");
+  exit(1);
+ }
+ rewind(archivo);
+ initscr();
+ clear();
+ fread(&D,sizeof(Datos),1,archivo);
+ while(!feof(archivo))
+ {
+  if(D.edad<18)
+  {
+   fwrite(&D,sizeof(Datos),1,archivoN);
+  }
+  fread(&D,sizeof(Datos),1,archivo);
+ }
+
+ getch();
+ fclose(archivo);
+ fclose(archivoN);
+ endwin();
+}
+
