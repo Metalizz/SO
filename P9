@@ -6,20 +6,19 @@ Utilice una estructura, memoria dinámica para 4 personas, funciones
 presentación en pantalla y flechas. También valide que no se permita
 capturar más de cuatro personas, ya que ocasionará un desbordamiento.*/
 
-
-
 #include <string.h>
 #include <stdlib.h>
 #include <ncurses.h>
 int num;
 char *choices[]={
-"1) Altas","2) Imprimir","3) Atender","4) Salida",
+"1) Altas","2) Imprimir","3) Fifo","4) Atender","5) Salida",
 };
 
-int n_choices=4;
+int n_choices=5;
 void print_menu(int highlight);
 void altas();
 void imprimir();
+void fifo();
 void atender();
 
 struct{
@@ -65,10 +64,14 @@ initscr();
                         noecho();
                         break;
                         case 3:
-                        atender();
+                        fifo();
                         noecho();
                         break;
                         case 4:
+                        atender();
+                        noecho();
+                        break;
+                        case 5:
                         ban=1;
                         break;
                         }
@@ -123,7 +126,7 @@ while(op=='s')
         getstr(fecha);
         var1.fecha[var1.num]=(char *)malloc(y+1);
 
-        if(var1.nombres[var1.num]==NULL || var1.direccion[var1.num]==NULL || var                                                                                        1.fecha[var1.num]==NULL)
+        if(var1.nombres[var1.num]==NULL || var1.direccion[var1.num]==NULL || var1.fecha[var1.num]==NULL)
             printw("Memoria insuficiente\n");
         else{
                 strcpy(var1.nombres[var1.num],pedirnombres);
@@ -150,11 +153,11 @@ for(x=0;x<var1.num;x++)
 getch();
 }
 
-void atender(){
+void fifo(){
 clear();
 int x,ciclo,s,b=0,y=0;
 char pedirnombres[80];
-printw("\n\n++++ A T E N D E R ++++\n\n");
+printw("\n\n++++ F I F O ++++\n\n");
 //printw("Nombre a atender: ");
 //getstr(pedirnombres);
 //for(x=0;x<var1.num;x++)
@@ -188,34 +191,43 @@ printw("\n\n++++ A T E N D E R ++++\n\n");
 getch();
 }
 
-/*int main(void)
-{
-initscr();
-char op;
-int w=0;
-var1.num=0;
-do{
-        clear();
-        printw("************ M E N U ************");
-        printw("\n\n\t1) Altas\n");
-        printw("\t2) Imprimir\n");
-        printw("\t3) Atender\n");
-        printw("\t4) Salida\n");
-        printw("\tOpcion >> ");
-        op=getch();
-        switch(op)
+void atender(){
+clear();
+int x,ciclo,s,b=0,y=0;
+char pedirnombres[80];
+
+printw("\n\n++++++ A T E N D E R ++++++\n\n");
+printw("Nombre Atender: ");
+getstr(pedirnombres);
+
+for(x=0;x<var1.num;x++)
+        if(!strcmp(var1.nombres[x],pedirnombres))
         {
-                case '1':
-                        altas();
-                        break;
-                case '2':
-                        imprimir();
-                        break;
-                case '3':
-                        atender();
-                        break;
+                ciclo=x;
+                b=1;
+                free(var1.nombres[x]);
+                free(var1.direccion[x]);
+                free(var1.fecha[x]);
         }
-} while(op!=4);
-endwin();
-}*/
+            if(b==1)
+            {
+                for(s=ciclo; s<var1.num-1;s++)
+                {
+                    y=strlen(var1.nombres[s+1]);
+                    var1.nombres[s]=(char *)malloc(y+1);
+                    strcpy(var1.nombres[s],var1.nombres[s+1]);
+
+                        y=strlen(var1.direccion[s+1]);
+                        var1.direccion[s]=(char *)malloc(y+1);
+                        strcpy(var1.direccion[s],var1.direccion[s+1]);
+
+                        y=strlen(var1.fecha[s+1]);
+                        var1.fecha[s]=(char *)malloc(y+1);
+                        strcpy(var1.fecha[s],var1.fecha[s+1]);
+                }
+                var1.num--;
+            }else
+                printw("\n\tREGISTRO NO ENCONTRADO\n");
+getch();
+}
 
